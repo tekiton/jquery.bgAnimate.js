@@ -39,6 +39,7 @@
 								clearInterval(timer);
 								timer = null;
 								complete = true;
+								option.onStop();
 								option.onComplete();
 								return;
 							}else if(loop>0){

@@ -4,7 +4,7 @@ jquery.bgAnimate.js
 何これ？
 --------
 縦に連結した画像をbackgroundに指定し、setIntervalで定期的にbackground-positionを移動することでアニメーション表示をするためのjQueryプラグインです。
-誰かが既に作ってそうだけど、この手法の名前がわからなくて、諦めて自分で書いてみた。
+誰かが既に作ってそうだけど、この手法の名前がわからなくて、諦めて自分で書いてみた的な。
 
 
 
@@ -19,13 +19,13 @@ jquery.bgAnimate.jsを読み込んで、divなどの背景に連結した画像�
 
 * CSS
 ```css
-#icon_01 { width:112px; height:56px; background:url(../images/icon_01.png) 0 0; }
+#icon_01 { width:112px; height:56px; background:url(../images/icon_01.png) 0 0; text-indent:-9999px; }
 ```
 
 * JS
 ```javascript
 $(function(){
-	$('#icon_01').bgAnimate({/* option */});
+    $('#icon_01').bgAnimate({/* option */});
 });
 ```
 
@@ -70,7 +70,7 @@ API
 
 * play()  
 アニメーションを再生します。再生中は無効です。  
-onPlay() が実行されます。最後まで再生すると onComplete() が実行されます。
+onPlay() が実行されます。最後まで再生すると onStop() と onComplete() が実行されます。
 
 * start()  
 play() のエイリアスです。
