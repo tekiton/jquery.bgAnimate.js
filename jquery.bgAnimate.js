@@ -65,7 +65,7 @@
 			};
 			
 			if(option.autoplay) animate.start();
-			$self.data('animate', animate);
+			$self.data('bgAnimate', animate);
 			
 		});
 		
