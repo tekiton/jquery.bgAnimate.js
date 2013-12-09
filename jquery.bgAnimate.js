@@ -24,19 +24,40 @@
 			var loop     = option.loop;
 			var timer    = null;
 			var complete = false;
+			var stopped  = false;
+			var duration = null;
+			
+			switch(typeof option.duration){
+				case 'function':
+					duration = option.duration;
+				break;
+				case 'object':
+					if(option.duration instanceof Array){
+						duration = function(i){ return option.duration[i%option.frame]; };
+						break;
+					}
+				case 'number':
+				default:
+					duration = function(i){ return option.duration; };
+				break;
+			}
 			
 			var animate  = {
+				
 				play: function(){
 					if(timer) return;
 					if(complete){
 						i = 0;
 						complete = false;
 					}
-					timer = setInterval(function(){
+					stopped = false;
+					var nextFrame = function(){
+						clearTimeout(timer);
+						if(stopped) return;
 						if(++i>=option.frame){
 							i = 0;
 							if(!loop){
-								clearInterval(timer);
+								stopped = true;
 								timer = null;
 								complete = true;
 								option.onStop();
@@ -47,21 +68,36 @@
 							}
 						}
 						$self.css({ backgroundPosition:'0 '+String(-height*i)+'px' });
-					}, option.duration);
+						timer = setTimeout(nextFrame, duration(i));
+					};
+					timer = setTimeout(nextFrame, duration(i));
 					option.onPlay();
 				},
-				start: function(){ animate.play(); },
-				stop : function(){
-					clearInterval(timer);
+				
+				start: function(){
+					animate.play();
+				},
+				
+				stop: function(){
+					clearTimeout(timer);
+					stopped = true;
 					timer = null;
 					i = 0;
 					option.onStop();
 				},
-				pause : function(){
-					clearInterval(timer);
+				
+				pause: function(){
+					clearTimeout(timer);
+					stopped = true;
 					timer = null;
 					option.onPause();
+				},
+				
+				reset: function(){
+					animate.stop();
+					$self.css({ backgroundPosition:'0 0' });
 				}
+				
 			};
 			
 			if(option.autoplay) animate.start();
