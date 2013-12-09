@@ -1,3 +1,9 @@
+/**
+ * jquery.bgAnimate.js
+ * 
+ * @author tekiton
+ * @license MIT LICENSE :)
+ */
 (function($){
 
 	jQuery.fn.bgAnimate = function(option){
