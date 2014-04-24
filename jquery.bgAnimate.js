@@ -1,15 +1,19 @@
 /**
  * jquery.bgAnimate.js
- * 
+ * https://github.com/tekiton/jquery.bgAnimate.js
+ *
  * @author tekiton
+ * @version 1.1.0
  * @license MIT LICENSE :)
  */
-(function($){
+;(function($){
 
 	jQuery.fn.bgAnimate = function(option){
-	
+
 		if(!option) option = {};
-		
+
+		if(option==='destroy') return $(this).removeData('bgAnimate');
+
 		option = $.extend({
 			height    : null,
 			duration  : 200,
@@ -21,9 +25,9 @@
 			onPause   : function(){},
 			onComplete: function(){}
 		}, option);
-		
+
 		return $(this).each(function(){
-		
+
 			var $self    = $(this);
 			var height   = option.height || $self.height();
 			var i        = 0;
@@ -32,7 +36,7 @@
 			var complete = false;
 			var stopped  = false;
 			var duration = null;
-			
+
 			switch(typeof option.duration){
 				case 'function':
 					duration = option.duration;
@@ -47,9 +51,9 @@
 					duration = function(i){ return option.duration; };
 				break;
 			}
-			
+
 			var animate  = {
-				
+
 				play: function(){
 					if(timer) return;
 					if(complete){
@@ -73,17 +77,20 @@
 								loop--;
 							}
 						}
-						$self.css({ backgroundPosition:'0 '+String(-height*i)+'px' });
+						$self.css('backgroundPosition', '').css('backgroundPositionX', '').css('backgroundPositionY', '');
+						var bgLeft = $self.css('backgroundPositionX') || $self.css('backgroundPosition').split(' ')[0];
+						$self.css({ backgroundPosition:bgLeft+' '+String(-height*i)+'px' });
 						timer = setTimeout(nextFrame, duration(i));
 					};
+					nextFrame();
 					timer = setTimeout(nextFrame, duration(i));
 					option.onPlay();
 				},
-				
+
 				start: function(){
 					animate.play();
 				},
-				
+
 				stop: function(){
 					clearTimeout(timer);
 					stopped = true;
@@ -91,26 +98,30 @@
 					i = 0;
 					option.onStop();
 				},
-				
+
 				pause: function(){
 					clearTimeout(timer);
 					stopped = true;
 					timer = null;
 					option.onPause();
 				},
-				
+
 				reset: function(){
 					animate.stop();
-					$self.css({ backgroundPosition:'0 0' });
+					$self.css({ backgroundPosition:'' });
+				},
+
+				destroy: function(){
+					$self.removeData('bgAnimate');
 				}
-				
+
 			};
-			
+
 			if(option.autoplay) animate.start();
 			$self.data('bgAnimate', animate);
-			
+
 		});
-		
+
 	};
 
 })(jQuery);
